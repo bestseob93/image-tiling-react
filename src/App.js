@@ -1,9 +1,21 @@
+// @flow
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-class App extends Component {
+type Props = {
+  email: String
+}
+
+class App extends Component<Props> {
+  square = (n: ?number) => {
+    console.log(n);
+  }
+
   render() {
+    this.square(null);
+    console.log(this.props.email);
+
     return (
       <div className="App">
         <header className="App-header">
