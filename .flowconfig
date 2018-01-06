@@ -9,5 +9,6 @@ all=warn
 untyped-type-import=error
 
 [options]
+esproposal.class_static_fields=enable
 
 [strict]
