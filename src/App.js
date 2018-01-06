@@ -2,18 +2,23 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Tiling from './components/Tiling';
 
 type Props = {
   email: String
 }
 
 class App extends Component<Props> {
+  static defaultProps = {
+    email: 'hi@hi.com'
+  }
+
   square = (n: ?number) => {
     console.log(n);
   }
 
   render() {
-    this.square(null);
+    this.square(3);
     console.log(this.props.email);
 
     return (
@@ -25,6 +30,7 @@ class App extends Component<Props> {
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
+        <Tiling />
       </div>
     );
   }
