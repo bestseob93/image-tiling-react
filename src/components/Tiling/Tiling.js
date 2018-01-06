@@ -21,7 +21,7 @@ class Tiling extends Component<Props, State> {
     const file = ev.target.files[0];
 
     reader.onloadend = () => {
-      const result = reader.result || {};
+      const result: object = reader.result || {};
       console.log(typeof result);
 
       const arrayBufferView = new Uint8Array(result);
