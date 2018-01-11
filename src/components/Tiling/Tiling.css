@@ -1,0 +1,16 @@
+.container {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.image_wrapper {
+    width: 100%;
+}
+
+.image_wrapper img {
+    width: 100%;
+}
+
+.image_wrapper:hover {
+    cursor: zoom-in;
+}

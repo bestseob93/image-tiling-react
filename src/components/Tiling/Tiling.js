@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import './Tiling.css';
 
 type Props = {}
 
@@ -48,6 +49,7 @@ class Tiling extends Component<Props, State> {
         break;
     }
 
+    console.log(realMimeType);
     return realMimeType;
   }
 
@@ -61,8 +63,8 @@ class Tiling extends Component<Props, State> {
       const realMimeType = this.getRealMimeType(reader);
 
       if (realMimeType !== 'unknown') {
-        const arrayBufferView = new Uint8Array(result);
-        const blob = new Blob([arrayBufferView], { type: realMimeType });
+        const arrayBufferView: Uint8Array = new Uint8Array(result);
+        const blob: Blob = new Blob([arrayBufferView], { type: realMimeType });
         const urlCreator = window.URL || window.webkitURL || {}.createObjectURL;
         const imageUrl = urlCreator.createObjectURL(blob);
         console.log(arrayBufferView);
@@ -80,14 +82,16 @@ class Tiling extends Component<Props, State> {
   }
 
   render() {
-    console.log(this.state.isOpen);
+    console.log(this.state.imageUrl);
     return (
-      <div>
+      <div className="container">
         <input
           type="file"
           onChange={this.handleFile}
         />
-        <img src={this.state.imageUrl} alt="ㅎ" />
+        <div className="image_wrapper">
+          <img src={this.state.imageUrl} alt="이미지" />
+        </div>
       </div>
     );
   }
