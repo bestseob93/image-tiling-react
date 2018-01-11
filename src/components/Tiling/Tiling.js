@@ -18,7 +18,8 @@ class Tiling extends Component<Props, State> {
 
   getRealMimeType = (reader: any): string => {
     console.log(reader);
-    const arr: Array = (new Uint8Array(reader.result)).subarray(0, 4);
+    const arr: Uint8Array = (new Uint8Array(reader.result)).subarray(0, 4);
+    console.log(arr);
     let header: string = '';
     let realMimeType: string = '';
     let i: number = 0;
