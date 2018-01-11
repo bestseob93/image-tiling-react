@@ -48,9 +48,10 @@
     "flow-bin": "^0.62.0"
   },
   "scripts": {
-    "start": "node scripts/start.js",
+    "start": "flow && node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom"
+    "test": "node scripts/test.js --env=jsdom",
+    "flow": "flow"
   },
   "jest": {
     "collectCoverageFrom": [
