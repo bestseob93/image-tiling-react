@@ -56,9 +56,11 @@ class Tiling extends Component<Props, State> {
   handleFile = (ev: SyntheticInputEvent<HTMLInputElement>): void => {
     const reader = new FileReader();
     const file = ev.target.files[0];
-
+    console.log(file);
     reader.onloadend = () => {
       console.log('1');
+      console.log(reader);
+      console.log(reader.result);
       const result: any = reader.result || {};
       const realMimeType = this.getRealMimeType(reader);
 
@@ -81,6 +83,26 @@ class Tiling extends Component<Props, State> {
     reader.readAsArrayBuffer(file);
   }
 
+  resizeImage = (imageUrl) => {
+    const ctx = this.canvas.getContext('2d');
+    ctx.drawImage(imageUrl, 0, 0, 1024, 768);
+    const SIZE = 512;
+    while (1024 > SIZE) {
+      this.canvas = this.halfSize(this.canvas);
+    }
+  }
+
+  halfSize = (canvas) => {
+    newCanvas.width = canvas.width / 2;
+    newCanvas.height = canvas.height / 2;
+
+    const ctx = newCanvas.getContext('2d');
+
+    ctx.drawImage(i, 0, 0, canvas.width, canvas.height);
+    
+    return newCanvas;
+  }
+
   render() {
     console.log(this.state.imageUrl);
     return (
@@ -91,6 +113,9 @@ class Tiling extends Component<Props, State> {
         />
         <div className="image_wrapper">
           <img src={this.state.imageUrl} alt="이미지" />
+        </div>
+        <div className="canvas_wrapper">
+          <canvas ref={(canvas) => { this.canvas = canvas; }} />
         </div>
       </div>
     );
