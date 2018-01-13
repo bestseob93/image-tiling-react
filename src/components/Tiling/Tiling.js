@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import React, { Component, type ElementRef } from 'react';
 import './Tiling.css';
 
 type Props = {}
@@ -83,23 +83,41 @@ class Tiling extends Component<Props, State> {
     reader.readAsArrayBuffer(file);
   }
 
-  resizeImage = (imageUrl) => {
-    const ctx = this.canvas.getContext('2d');
-    ctx.drawImage(imageUrl, 0, 0, 1024, 768);
-    const SIZE = 512;
-    while (1024 > SIZE) {
-      this.canvas = this.halfSize(this.canvas);
+  canvas: ?ElementRef<'canvas'>;
+
+  resizeImage = (imageUrl: string) => {
+    const canvas = this.canvas || {};
+    if (!(canvas instanceof HTMLCanvasElement)) {
+      return;
     }
+
+    let ctx: any = null;
+
+    if (canvas) {
+      ctx = canvas.getContext('2d');
+    }
+
+    ctx.drawImage(imageUrl, 0, 0, 1024, 768);
+
+    this.canvas = this.halfSize(canvas);
   }
 
-  halfSize = (canvas) => {
+  halfSize = (canvas: ElementRef<'canvas'>) => {
+    const newCanvas = document.createElement('canvas');
+    if (!(newCanvas instanceof HTMLCanvasElement)) {
+      return;
+    }
+
+    let ctx: any = null;
     newCanvas.width = canvas.width / 2;
     newCanvas.height = canvas.height / 2;
 
-    const ctx = newCanvas.getContext('2d');
+    if (newCanvas) {
+      ctx = newCanvas.getContext('2d');
+    }
 
-    ctx.drawImage(i, 0, 0, canvas.width, canvas.height);
-    
+    ctx.drawImage(canvas.toBlob, 0, 0, newCanvas.width, newCanvas.height);
+
     return newCanvas;
   }
 
@@ -115,7 +133,7 @@ class Tiling extends Component<Props, State> {
           <img src={this.state.imageUrl} alt="이미지" />
         </div>
         <div className="canvas_wrapper">
-          <canvas ref={(canvas) => { this.canvas = canvas; }} />
+          <canvas ref={canvas => { this.canvas = canvas; }} />
         </div>
       </div>
     );
