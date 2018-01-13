@@ -54,7 +54,9 @@ class Tiling extends Component<Props, State> {
   }
 
   handleFile = (ev: SyntheticInputEvent<HTMLInputElement>): void => {
-    const reader = new FileReader();
+    const reader: FileReader = new FileReader();
+    const image: Image = new Image();
+
     const file = ev.target.files[0];
     console.log(file);
     reader.onloadend = () => {
@@ -75,6 +77,10 @@ class Tiling extends Component<Props, State> {
           file,
           imageUrl
         });
+
+        image.src = imageUrl;
+
+        this.resizeImage(image);
       } else {
         alert('Please upload a valid image file');
       }
@@ -85,27 +91,13 @@ class Tiling extends Component<Props, State> {
 
   canvas: ?ElementRef<'canvas'>;
 
-  resizeImage = (imageUrl: string) => {
-    const canvas = this.canvas || {};
-    if (!(canvas instanceof HTMLCanvasElement)) {
-      return;
-    }
+  halfSize(canvas: ElementRef<'canvas'>): ?HTMLCanvasElement {
+    const newCanvas = this.canvas || {};
+    const image: Image = new Image();
 
-    let ctx: any = null;
-
-    if (canvas) {
-      ctx = canvas.getContext('2d');
-    }
-
-    ctx.drawImage(imageUrl, 0, 0, 1024, 768);
-
-    this.canvas = this.halfSize(canvas);
-  }
-
-  halfSize = (canvas: ElementRef<'canvas'>) => {
-    const newCanvas = document.createElement('canvas');
+    console.log(canvas.width);
     if (!(newCanvas instanceof HTMLCanvasElement)) {
-      return;
+      return undefined;
     }
 
     let ctx: any = null;
@@ -116,13 +108,51 @@ class Tiling extends Component<Props, State> {
       ctx = newCanvas.getContext('2d');
     }
 
-    ctx.drawImage(canvas.toBlob, 0, 0, newCanvas.width, newCanvas.height);
+    console.log('fuck');
+    console.log(canvas.toBlob);
+    canvas.toBlob((blob: Blob) => {
+      const urlCreator = window.URL || window.webkitURL || {}.createObjectURL;
+      const url = urlCreator.createObjectURL(blob);
+      image.onload = () => {
+        urlCreator.revokeObjectURL(url);
+      };
+
+      image.src = url;
+    });
+
+    console.log(newCanvas);
+    console.log(newCanvas.width);
+    ctx.drawImage(image, 0, 0, newCanvas.width, newCanvas.height);
 
     return newCanvas;
   }
 
+  resizeImage = (image: Image) => {
+    const canvas = document.createElement('canvas');
+
+    console.log(canvas);
+    console.log('hi');
+    if (!(canvas instanceof HTMLCanvasElement)) {
+      return;
+    }
+
+    let ctx: any = null;
+
+    if (canvas) {
+      ctx = canvas.getContext('2d');
+    }
+
+    ctx.drawImage(image, 0, 0, 1024, 768);
+
+
+    console.log('hi');
+    this.canvas = this.halfSize(canvas);
+    console.log('hi');
+  }
+
   render() {
     console.log(this.state.imageUrl);
+    console.log(this.canvas);
     return (
       <div className="container">
         <input
@@ -133,7 +163,7 @@ class Tiling extends Component<Props, State> {
           <img src={this.state.imageUrl} alt="이미지" />
         </div>
         <div className="canvas_wrapper">
-          <canvas ref={canvas => { this.canvas = canvas; }} />
+          <canvas ref={canvas => { this.canvas = canvas; }} width="1024" height="768" />
         </div>
       </div>
     );
